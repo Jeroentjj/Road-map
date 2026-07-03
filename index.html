@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Studio Roadmap — Open Exploration</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EBEBE9;
+  --panel:#F4F4F2;
+  --line:#CDCDC9;
+  --line-soft:#DBDBD7;
+  --ink:#17181A;
+  --ink-2:#45474B;
+  --muted:#82848A;
+  --accent:#2B3A8C;        /* deep indigo */
+  --accent-2:#5A67B8;
+  --warm:#A8622F;          /* current marker */
+  --shadow:0 1px 2px rgba(23,24,26,.05), 0 8px 24px rgba(23,24,26,.05);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:'Archivo',sans-serif;
+  -webkit-font-smoothing:antialiased;
+  padding-bottom:96px;
+}
+.mono{font-family:'IBM Plex Mono',monospace;}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px;}
+
+/* ————— STICKY TOP ————— */
+.topline{
+  border-bottom:1px solid var(--line);
+  background:color-mix(in srgb, var(--paper) 88%, transparent);
+  position:sticky;top:0;z-index:50;backdrop-filter:blur(8px);
+}
+.topline-inner{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 20px;max-width:1040px;margin:0 auto;
+}
+.brandmark{font-size:12px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;}
+.brandmark em{font-style:normal;color:var(--accent);}
+.top-pct{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink-2);display:flex;align-items:center;gap:10px;}
+.top-bar{width:96px;height:3px;background:var(--line);border-radius:2px;overflow:hidden;}
+.top-bar i{display:block;height:100%;background:var(--accent);width:0%;transition:width .5s ease;}
+
+/* ————— HERO ————— */
+.hero{padding:56px 0 32px;}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:48px;align-items:end;}
+.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;}
+.eyebrow b{color:var(--accent);font-weight:600;}
+h1{font-size:clamp(34px,5.4vw,56px);font-weight:800;letter-spacing:-.025em;line-height:1;text-transform:uppercase;}
+h1 .thin{font-weight:400;color:var(--ink-2);}
+.lede{margin-top:18px;max-width:470px;font-size:15px;line-height:1.6;color:var(--ink-2);}
+
+.stats{display:flex;flex-direction:column;border-left:1px solid var(--line);}
+.stat{padding:14px 0 14px 22px;border-bottom:1px solid var(--line-soft);}
+.stat:last-child{border-bottom:none;}
+.stat .n{font-family:'IBM Plex Mono',monospace;font-size:30px;font-weight:600;line-height:1;}
+.stat .n b{color:var(--accent);font-weight:600;}
+.stat .l{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:6px;}
+
+/* ————— MAP (diverge → converge → build) ————— */
+.map{
+  margin-top:44px;background:var(--panel);border:1px solid var(--line);
+  border-radius:3px;box-shadow:var(--shadow);overflow:hidden;
+}
+.map-head{display:flex;justify-content:space-between;align-items:center;padding:12px 18px;border-bottom:1px solid var(--line-soft);}
+.map-title{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-2);}
+.map-note{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);}
+.map svg{display:block;width:100%;height:auto;}
+.branch{fill:none;stroke:var(--line);stroke-width:1.1;transition:stroke .4s ease;}
+.branch.lit{stroke:var(--accent-2);}
+.spine{fill:none;stroke:var(--line);stroke-width:2;}
+.spine-fill{fill:none;stroke:var(--accent);stroke-width:2.5;transition:stroke-dashoffset .8s cubic-bezier(.2,.8,.2,1);}
+.node{fill:var(--paper);stroke:var(--muted);stroke-width:1.4;transition:all .3s ease;}
+.node.done{fill:var(--accent);stroke:var(--accent);}
+.node.current{stroke:var(--warm);stroke-width:2;}
+.node-label{font-family:'IBM Plex Mono',monospace;font-size:9.5px;fill:var(--muted);}
+.node-label.done{fill:var(--accent);font-weight:600;}
+.node-label.current{fill:var(--warm);font-weight:600;}
+.map-cap{font-family:'IBM Plex Mono',monospace;font-size:9.5px;fill:var(--muted);letter-spacing:.12em;}
+.decision{fill:var(--paper);stroke:var(--ink-2);stroke-width:1.4;transition:all .3s ease;}
+.decision.done{fill:var(--ink);stroke:var(--ink);}
+.go-ring{fill:none;stroke:var(--line);stroke-width:1.2;}
+.go-ring.done{stroke:var(--accent);}
+.go-txt{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;fill:var(--muted);letter-spacing:.1em;}
+.go-txt.done{fill:var(--accent);}
+
+/* ————— PHASES ————— */
+.phase-head{margin:72px 0 8px;display:flex;align-items:baseline;gap:18px;flex-wrap:wrap;}
+.phase-idx{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--paper);background:var(--ink);padding:5px 10px;letter-spacing:.1em;border-radius:2px;}
+.phase-name{font-size:22px;font-weight:700;letter-spacing:-.01em;text-transform:uppercase;}
+.phase-range{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:.1em;}
+.phase-sub{color:var(--ink-2);font-size:14px;max-width:560px;line-height:1.55;margin:10px 0 26px;}
+
+/* ————— MONTH ROWS ————— */
+.months{border-top:1px solid var(--line);}
+.month{border-bottom:1px solid var(--line);transition:background .2s ease;}
+.month.open{background:var(--panel);box-shadow:var(--shadow);}
+.m-head{
+  display:grid;grid-template-columns:56px minmax(0,1fr) auto 90px 28px;
+  align-items:center;gap:14px;padding:18px 14px;cursor:pointer;user-select:none;
+}
+.m-head:focus-visible{outline:2px solid var(--accent);outline-offset:-2px;}
+.m-num{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted);letter-spacing:.06em;}
+.month.done-all .m-num{color:var(--accent);}
+.m-title{font-size:17px;font-weight:600;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.m-badge{
+  font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--warm);border:1px solid var(--warm);border-radius:2px;padding:3px 8px;display:none;
+}
+.month.current .m-badge{display:inline-block;}
+.m-meter{display:flex;align-items:center;gap:8px;justify-self:end;}
+.m-frac{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);}
+.month.done-all .m-frac{color:var(--accent);}
+.dots{display:flex;gap:3px;}
+.dot{width:6px;height:6px;border-radius:1px;background:var(--line);}
+.dot.on{background:var(--accent);}
+.m-chev{justify-self:end;color:var(--muted);font-size:11px;transition:transform .25s ease;}
+.month.open .m-chev{transform:rotate(90deg);color:var(--ink);}
+.m-body{max-height:0;overflow:hidden;transition:max-height .35s ease;}
+.month.open .m-body{max-height:720px;}
+.m-inner{padding:2px 14px 22px 84px;}
+.m-why{
+  font-size:13px;color:var(--ink-2);line-height:1.6;
+  border-left:2px solid var(--accent);padding:2px 0 2px 14px;margin-bottom:14px;max-width:560px;
+}
+ul.dels{list-style:none;}
+li.del{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--line-soft);cursor:pointer;}
+li.del:first-child{border-top:none;}
+li.del:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+.cb{
+  width:17px;height:17px;border:1.5px solid var(--muted);border-radius:2px;flex-shrink:0;margin-top:2px;
+  display:flex;align-items:center;justify-content:center;transition:all .15s ease;background:var(--paper);
+}
+li.del.on .cb{background:var(--accent);border-color:var(--accent);}
+.cb svg{display:none;width:10px;height:10px;}
+li.del.on .cb svg{display:block;}
+.d-txt{font-size:14px;line-height:1.5;}
+li.del.on .d-txt{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--line);}
+
+footer{
+  margin-top:80px;border-top:1px solid var(--line);padding-top:22px;
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;
+  font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);
+}
+.reset{
+  background:none;border:1px solid var(--line);color:var(--muted);
+  font-family:'IBM Plex Mono',monospace;font-size:11px;padding:7px 14px;border-radius:2px;cursor:pointer;letter-spacing:.06em;
+}
+.reset:hover{border-color:#A8402F;color:#A8402F;}
+
+@media (max-width:800px){
+  .hero-grid{grid-template-columns:1fr;gap:28px;}
+  .stats{flex-direction:row;border-left:none;border-top:1px solid var(--line);}
+  .stat{flex:1;padding:14px 0 0 0;border-bottom:none;}
+  .stat + .stat{padding-left:18px;border-left:1px solid var(--line-soft);}
+}
+@media (max-width:620px){
+  .m-head{grid-template-columns:44px minmax(0,1fr) auto 24px;}
+  .m-meter .dots{display:none;}
+  .m-badge{display:none !important;}
+  .m-inner{padding-left:14px;}
+  .stat .n{font-size:22px;}
+  h1{font-size:34px;}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none !important;}}
+</style>
+</head>
+<body>
+
+<div class="topline">
+  <div class="topline-inner">
+    <div class="brandmark">Roadmap<em>&nbsp;/&nbsp;</em>12&nbsp;MO</div>
+    <div class="top-pct"><span id="top-pct-n">0%</span><span class="top-bar"><i id="top-bar-fill"></i></span></div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <section class="hero">
+    <div class="hero-grid">
+      <div>
+        <div class="eyebrow">Business build · open exploration · <b>zero → first client</b></div>
+        <h1>Explore wide.<br><span class="thin">Commit once. Build.</span></h1>
+        <p class="lede">Twelve months in two movements. First half: open exploration across every direction — products, services, anything that fits skills and market. Month six: one decision. Second half: build everything that decision needs, through to the first client.</p>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="n mono" id="stat-dels">0<b>/54</b></div><div class="l">Deliverables</div></div>
+        <div class="stat"><div class="n mono" id="stat-months">0<b>/12</b></div><div class="l">Months closed</div></div>
+        <div class="stat"><div class="n mono" id="stat-pct">0<b>%</b></div><div class="l">Complete</div></div>
+      </div>
+    </div>
+
+    <div class="map">
+      <div class="map-head">
+        <span class="map-title">Diverge → Decide → Build</span>
+        <span class="map-note" id="map-note">M06 = decision · M12 = go</span>
+      </div>
+      <svg id="mapsvg" viewBox="0 0 1000 300" preserveAspectRatio="xMidYMid meet" aria-label="Exploration map: open branches converging on a decision at month six, then a single build line to launch at month twelve"></svg>
+    </div>
+  </section>
+
+  <div id="phases"></div>
+
+  <footer>
+    <span id="save-note">Progress saves automatically.</span>
+    <button class="reset" id="reset">Reset progress</button>
+  </footer>
+
+</div>
+
+<script>
+/* ————————— DATA ————————— */
+const DATA=[
+ {idx:"P1",name:"Discovery & Direction",range:"M01 – M06",
+  sub:"Decide what the business actually is before building anything around it — skills, market, gaps, real conversations, then one committed direction.",
+  items:[
+   {t:"Foundation Audit",w:"A clear-eyed inventory of what you actually bring, before any market talk — the base every later decision gets checked against.",
+    d:["Map current skills, tools & capabilities across all your fields",
+       "Define personal criteria for a good business (autonomy, creative control, income ceiling, time investment)",
+       "List at least 5 directions worth exploring — products, services, or hybrids",
+       "Set the Month 06 decision deadline on the calendar"]},
+   {t:"Market Landscape Scan",w:"Broad rather than deep — see which directions have real pull before spending energy on any single one.",
+    d:["Research market size & trends for each shortlisted direction",
+       "Identify 3–5 target client types per direction",
+       "Note entry barriers & required investment per direction",
+       "Flag directions with clear near-term revenue potential"]},
+   {t:"Competitive Analysis",w:"Seeing what's already out there sharpens where the actual gap is — and rules out crowded, low-differentiation directions early.",
+    d:["Identify 5–8 competitors or reference businesses across shortlisted directions",
+       "Map their positioning, pricing, and offer",
+       "Find gaps or underserved niches",
+       "Narrow the shortlist to top 2–3 directions"]},
+   {t:"Client Discovery Conversations",w:"Talking to real people beats research reports — this is where the abstract idea meets an actual willingness to pay.",
+    d:["Reach out to 10+ potential clients or industry contacts",
+       "Run 5+ real conversations about pain points & willingness to pay",
+       "Capture direct quotes and insights per direction",
+       "Test one rough concept pitch per direction"]},
+   {t:"Concept Ideation & Validation",w:"Turn research into a short, testable list of real concepts — and get outside eyes on them before committing.",
+    d:["Draft 2–3 concrete concepts (product or service) with a one-line pitch each",
+       "Score each on skills-fit, market pull, scalability, and personal energy",
+       "Run a small validation test per concept (mockup, landing page, or conversation)",
+       "Get outside feedback from 2–3 trusted people"]},
+   {t:"Direction Decision",w:"The hinge point of the whole roadmap — everything from here on builds around this one choice.",
+    d:["Choose the one direction to commit to",
+       "Write a one-page value proposition & target client profile",
+       "Define what 'operationally ready' means specifically for this direction",
+       "Confirm or adjust the Month 07–12 milestones"]}
+  ]},
+ {idx:"P2",name:"Build & Launch Readiness",range:"M07 – M12",
+  sub:"Everything the chosen direction needs to actually operate — identity, offer, systems — through to taking on the first client.",
+  items:[
+   {t:"Brand Identity & Positioning",w:"Identity built on a decided offer, not the other way round — so nothing here is guesswork.",
+    d:["Finalize business name & tagline",
+       "Define visual identity (logo, colors, type)",
+       "Write a positioning statement — who it's for, what it does, why different",
+       "Build a basic brand asset kit (logo files, templates)"]},
+   {t:"Offer & Pricing",w:"Turn the direction into something a client can actually say yes to.",
+    d:["Define concrete service or product packages",
+       "Set pricing model & rates",
+       "Write a scope-of-work / proposal template",
+       "Define the onboarding process for the first client"]},
+   {t:"Website & Portfolio",w:"The first tangible, public proof the business exists — desktop and mobile, findable.",
+    d:["Draft site structure & content",
+       "Build and publish the website (desktop + mobile)",
+       "Assemble portfolio or proof-of-work pieces",
+       "Set up a contact / inquiry flow"]},
+   {t:"Business Plan & Financial Model",w:"The unglamorous plumbing — but it's what makes 'go' a real decision instead of a leap.",
+    d:["Write a lean business plan (goals, model, roadmap)",
+       "Build a financial model (costs, pricing, break-even)",
+       "Set up an accounting system & business bank account",
+       "Confirm legal structure (KvK, BTW, insurance)"]},
+   {t:"Sales Materials & Pipeline",w:"Get the offer in front of real people before day one, so launch isn't starting from a cold list.",
+    d:["Create outreach materials (deck, one-pager, email templates)",
+       "Build a target client list of 20+ prospects",
+       "Start outreach conversations",
+       "Track a pipeline of warm leads"]},
+   {t:"Operational Readiness & Launch",w:"The final checklist — once this is done, the only thing left is saying go.",
+    d:["Finalize contracts & terms",
+       "Set up project management & invoicing systems",
+       "Complete the launch checklist",
+       "Take on the first client — go live"]}
+  ]}
+];
+
+const KEY='studio-roadmap-progress';
+let state={};
+let openMonths=new Set();
+
+const ids=()=>{const a=[];DATA.forEach((p,pi)=>p.items.forEach((m,mi)=>m.d.forEach((_,di)=>a.push(pi+'-'+mi+'-'+di))));return a;};
+const monthDone=(pi,mi)=>DATA[pi].items[mi].d.every((_,di)=>state[pi+'-'+mi+'-'+di]);
+const monthCount=(pi,mi)=>DATA[pi].items[mi].d.filter((_,di)=>state[pi+'-'+mi+'-'+di]).length;
+
+/* ————————— MAP: diverge → decide → build ————————— */
+const NS='http://www.w3.org/2000/svg';
+const mk=(n,at)=>{const e=document.createElementNS(NS,n);for(const k in at)e.setAttribute(k,at[k]);return e;};
+
+function buildMap(){
+  const svg=document.getElementById('mapsvg');
+  svg.innerHTML='';
+  const midY=150;
+  const startX=60, decideX=520, goX=940;
+
+  // exploration branches: 7 faint paths fanning out then converging at decision
+  const spread=[ -95,-64,-33,0,33,64,95 ];
+  spread.forEach((dy,i)=>{
+    const d=`M ${startX} ${midY}
+      C ${startX+120} ${midY+dy*1.35}, ${decideX-160} ${midY+dy*1.15}, ${decideX-14} ${midY}`;
+    svg.appendChild(mk('path',{d,class:'branch',id:'br-'+i}));
+  });
+
+  // exploration month nodes sit along the outermost fan region as waypoints M1–M6
+  // place them evenly along x between start and decide, alternating above/below spine
+  const exX=(i)=>startX+ (decideX-startX-40) * ((i+1)/7);
+  const exY=(i)=>midY + (i%2===0?-1:1)*(58 - i*6);
+  for(let i=0;i<6;i++){
+    svg.appendChild(mk('circle',{cx:exX(i),cy:exY(i),r:7,class:'node',id:'nd-'+i}));
+    const t=mk('text',{x:exX(i),y:exY(i)+(i%2===0?-14:22),'text-anchor':'middle',class:'node-label',id:'nl-'+i});
+    t.textContent='M0'+(i+1);svg.appendChild(t);
+  }
+
+  // decision diamond at M06 convergence
+  const dsz=13;
+  svg.appendChild(mk('path',{d:`M ${decideX} ${midY-dsz} L ${decideX+dsz} ${midY} L ${decideX} ${midY+dsz} L ${decideX-dsz} ${midY} Z`,class:'decision',id:'decide'}));
+  const dt=mk('text',{x:decideX,y:midY+34,'text-anchor':'middle',class:'map-cap'});
+  dt.textContent='DECISION';svg.appendChild(dt);
+
+  // build spine: straight line decision → GO
+  svg.appendChild(mk('line',{x1:decideX+dsz,y1:midY,x2:goX-26,y2:midY,class:'spine'}));
+  const fill=mk('line',{x1:decideX+dsz,y1:midY,x2:goX-26,y2:midY,class:'spine-fill',id:'spine-fill'});
+  const spLen=(goX-26)-(decideX+dsz);
+  fill.setAttribute('stroke-dasharray',spLen);
+  fill.setAttribute('stroke-dashoffset',spLen);
+  svg.appendChild(fill);
+
+  // build month nodes M7–M12 along the spine
+  for(let i=0;i<6;i++){
+    const x=decideX+dsz+ (spLen)*((i+1)/6.6);
+    svg.appendChild(mk('circle',{cx:x,cy:midY,r:7,class:'node',id:'nd-'+(i+6)}));
+    const t=mk('text',{x:x,y:i%2===0?midY-16:midY+26,'text-anchor':'middle',class:'node-label',id:'nl-'+(i+6)});
+    t.textContent='M'+String(i+7).padStart(2,'0');svg.appendChild(t);
+  }
+
+  // GO ring
+  svg.appendChild(mk('circle',{cx:goX-4,cy:midY,r:20,class:'go-ring',id:'go-ring'}));
+  const g=mk('text',{x:goX-4,y:midY+4,'text-anchor':'middle',class:'go-txt',id:'go-txt'});
+  g.textContent='GO';svg.appendChild(g);
+
+  // captions
+  const c1=mk('text',{x:startX,y:midY-110,class:'map-cap'});c1.textContent='DIVERGE — EXPLORE EVERYTHING';svg.appendChild(c1);
+  const c2=mk('text',{x:decideX+40,y:midY-110,class:'map-cap'});c2.textContent='CONVERGE — BUILD ONE THING';svg.appendChild(c2);
+}
+
+function updateMap(){
+  // months done overall
+  let flat=[];DATA.forEach((p,pi)=>p.items.forEach((m,mi)=>flat.push(monthDone(pi,mi))));
+  // exploration branches light up progressively with P1 months done
+  const p1done=flat.slice(0,6).filter(Boolean).length;
+  for(let i=0;i<7;i++){
+    const br=document.getElementById('br-'+i);
+    if(br)br.classList.toggle('lit', i < Math.round(p1done/6*7));
+  }
+  // nodes
+  let firstIncomplete=flat.findIndex(v=>!v);
+  for(let i=0;i<12;i++){
+    const nd=document.getElementById('nd-'+i),nl=document.getElementById('nl-'+i);
+    if(nd){nd.classList.toggle('done',flat[i]);nd.classList.toggle('current',i===firstIncomplete);}
+    if(nl){nl.classList.toggle('done',flat[i]);nl.classList.toggle('current',i===firstIncomplete&&!flat[i]);}
+  }
+  // decision diamond
+  const dec=document.getElementById('decide');
+  if(dec)dec.classList.toggle('done',flat[5]);
+  // spine fill by P2 deliverables
+  const p2ids=[];DATA[1].items.forEach((m,mi)=>m.d.forEach((_,di)=>p2ids.push('1-'+mi+'-'+di)));
+  const p2pct=p2ids.filter(i=>state[i]).length/p2ids.length;
+  const fill=document.getElementById('spine-fill');
+  if(fill){
+    const len=parseFloat(fill.getAttribute('stroke-dasharray'));
+    fill.setAttribute('stroke-dashoffset',len*(1-p2pct));
+  }
+  // GO
+  const allDone=flat.every(Boolean);
+  document.getElementById('go-ring')?.classList.toggle('done',allDone);
+  document.getElementById('go-txt')?.classList.toggle('done',allDone);
+}
+
+/* ————————— RENDER ————————— */
+function render(){
+  const root=document.getElementById('phases');
+  root.innerHTML='';
+  let firstIncomplete=null,globalM=0;
+  DATA.forEach((p,pi)=>{
+    const ph=document.createElement('div');
+    ph.innerHTML=`<div class="phase-head">
+        <span class="phase-idx mono">${p.idx}</span>
+        <span class="phase-name">${p.name}</span>
+        <span class="phase-range mono">${p.range}</span>
+      </div>
+      <p class="phase-sub">${p.sub}</p>`;
+    const list=document.createElement('div');list.className='months';
+
+    p.items.forEach((m,mi)=>{
+      const num=('0'+(globalM+1)).slice(-2);
+      const cnt=monthCount(pi,mi),tot=m.d.length,all=cnt===tot;
+      if(!all&&firstIncomplete===null)firstIncomplete=globalM;
+      const key=pi+'-'+mi;
+      const div=document.createElement('div');
+      div.className='month'+(all?' done-all':'')+(openMonths.has(key)?' open':'');
+      div.dataset.g=globalM;
+
+      const head=document.createElement('div');
+      head.className='m-head';head.tabIndex=0;head.setAttribute('role','button');
+      head.setAttribute('aria-expanded',openMonths.has(key));
+      head.innerHTML=`<span class="m-num mono">M${num}</span>
+        <span class="m-title">${m.t}</span>
+        <span class="m-badge mono">Current</span>
+        <span class="m-meter"><span class="dots">${m.d.map((_,di)=>`<span class="dot${state[key+'-'+di]?' on':''}"></span>`).join('')}</span><span class="m-frac mono">${cnt}/${tot}</span></span>
+        <span class="m-chev">▶</span>`;
+      const toggle=()=>{openMonths.has(key)?openMonths.delete(key):openMonths.add(key);render();};
+      head.addEventListener('click',toggle);
+      head.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle();}});
+
+      const body=document.createElement('div');body.className='m-body';
+      const inner=document.createElement('div');inner.className='m-inner';
+      inner.innerHTML=`<div class="m-why">${m.w}</div>`;
+      const ul=document.createElement('ul');ul.className='dels';
+      m.d.forEach((txt,di)=>{
+        const id=key+'-'+di;
+        const li=document.createElement('li');
+        li.className='del'+(state[id]?' on':'');li.tabIndex=0;li.setAttribute('role','checkbox');
+        li.setAttribute('aria-checked',!!state[id]);
+        li.innerHTML=`<span class="cb"><svg viewBox="0 0 10 10"><polyline points="1,5 4,8 9,1" fill="none" stroke="#EBEBE9" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="d-txt">${txt}</span>`;
+        const flip=e=>{e.stopPropagation();state[id]=!state[id];render();try{localStorage.setItem(KEY,JSON.stringify(state));}catch(err){console.error(err);}};
+        li.addEventListener('click',flip);
+        li.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();flip(e);}});
+        ul.appendChild(li);
+      });
+      inner.appendChild(ul);body.appendChild(inner);
+      div.appendChild(head);div.appendChild(body);
+      list.appendChild(div);
+      globalM++;
+    });
+    ph.appendChild(list);root.appendChild(ph);
+  });
+
+  if(firstIncomplete!==null){
+    const cur=document.querySelector('.month[data-g="'+firstIncomplete+'"]');
+    if(cur)cur.classList.add('current');
+  }
+
+  const total=ids().length,done=ids().filter(i=>state[i]).length;
+  let monthsDone=0;DATA.forEach((p,pi)=>p.items.forEach((m,mi)=>{if(monthDone(pi,mi))monthsDone++;}));
+  const pct=Math.round(done/total*100);
+  document.getElementById('stat-dels').innerHTML=done+'<b>/'+total+'</b>';
+  document.getElementById('stat-months').innerHTML=monthsDone+'<b>/12</b>';
+  document.getElementById('stat-pct').innerHTML=pct+'<b>%</b>';
+  document.getElementById('top-pct-n').textContent=pct+'%';
+  document.getElementById('top-bar-fill').style.width=pct+'%';
+  updateMap();
+}
+
+/* ————————— PERSISTENCE ————————— */
+function load(){
+  try{
+    const raw=localStorage.getItem(KEY);
+    if(raw)state=JSON.parse(raw);
+  }catch(e){state={};}
+  document.getElementById('save-note').textContent='Progress saves automatically to this browser.';
+  render();
+}
+document.getElementById('reset').addEventListener('click',()=>{
+  if(!confirm('Reset all progress? Every checked deliverable will be cleared.'))return;
+  state={};render();
+  try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){console.error(e);}
+});
+
+buildMap();
+load();
+</script>
+</body>
+</html>
